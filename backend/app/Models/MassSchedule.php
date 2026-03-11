@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MassSchedule extends Model
 {
+    use HasFactory;
+
     public const SUNDAY = 0;
     public const MONDAY = 1;
     public const TUESDAY = 2;
