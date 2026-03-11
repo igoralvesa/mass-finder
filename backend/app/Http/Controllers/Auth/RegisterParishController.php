@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use OpenApi\Annotations as OA;
 use App\Http\Requests\Auth\RegisterParishRequest;
 use App\Http\Resources\UserResource;
 use App\Models\Parish;
@@ -11,6 +12,19 @@ use Illuminate\Http\JsonResponse;
 
 class RegisterParishController extends Controller
 {
+    /**
+     * @OA\Post(
+     *     path="/auth/register-parish",
+     *     summary="Registrar paróquia",
+     *     tags={"Auth"},
+     *     @OA\RequestBody(required=true, @OA\JsonContent(ref="#/components/schemas/RegisterParishRequest")),
+     *     @OA\Response(response=201, description="Paróquia cadastrada com sucesso", @OA\JsonContent(
+     *         @OA\Property(property="message", type="string"),
+     *         @OA\Property(property="data", ref="#/components/schemas/User")
+     *     )),
+     *     @OA\Response(response=422, description="Validação falhou", @OA\JsonContent(ref="#/components/schemas/ErrorValidationResponse"))
+     * )
+     */
     public function store(RegisterParishRequest $request): JsonResponse
     {
         $user = User::create([

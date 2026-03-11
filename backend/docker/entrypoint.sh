@@ -1,6 +1,10 @@
 #!/bin/sh
 set -e
 
+echo "Creating storage directories..."
+mkdir -p storage/framework/{sessions,views,cache/data}
+chmod -R 775 storage bootstrap/cache
+
 echo "Waiting for database..."
 
 until php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'DB connected'; } catch (\Exception \$e) { exit(1); }"; do
@@ -12,6 +16,8 @@ php artisan migrate --force
 
 echo "Running seed..."
 php artisan db:seed --force
+
+php artisan l5-swagger:generate
 
 echo "Starting Laravel..."
 php artisan serve --host=0.0.0.0 --port=8000
