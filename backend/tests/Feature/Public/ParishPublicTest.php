@@ -28,4 +28,18 @@ class ParishPublicTest extends TestCase
         $response->assertJsonCount(1, 'data');
         $response->assertJsonPath('data.0.name', fn ($name) => is_string($name));
     }
+
+    public function test_public_show_returns_404_for_non_approved_parish(): void
+    {
+        $user = User::factory()->create();
+        $parish = Parish::factory()->create([
+            'user_id' => $user->id,
+            'status' => Parish::STATUS_PENDING,
+        ]);
+
+        $response = $this->getJson("/api/public/parishes/{$parish->id}");
+
+        $response->assertNotFound();
+        $response->assertJsonPath('message', 'Paróquia não encontrada.');
+    }
 }

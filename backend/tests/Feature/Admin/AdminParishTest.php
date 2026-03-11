@@ -50,4 +50,29 @@ class AdminParishTest extends TestCase
 
         $response->assertForbidden();
     }
+
+    public function test_admin_can_reject_a_parish(): void
+    {
+        $admin = User::factory()->admin()->create();
+        Sanctum::actingAs($admin, ['*']);
+
+        $parishUser = User::factory()->create();
+        $parish = Parish::factory()->create([
+            'user_id' => $parishUser->id,
+            'status' => Parish::STATUS_PENDING,
+        ]);
+
+        $response = $this->patchJson("/api/admin/parishes/{$parish->id}/reject", [
+            'rejection_reason' => 'Documentação incompleta.',
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonPath('message', 'Paróquia rejeitada.');
+
+        $this->assertDatabaseHas('parishes', [
+            'id' => $parish->id,
+            'status' => Parish::STATUS_REJECTED,
+            'rejection_reason' => 'Documentação incompleta.',
+        ]);
+    }
 }
