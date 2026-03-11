@@ -37,6 +37,7 @@ services:
   frontend:
     build: ./frontend
     container_name: mass_frontend
+    platform: linux/amd64
     depends_on:
       - backend
     ports:
