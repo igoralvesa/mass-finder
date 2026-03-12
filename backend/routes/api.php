@@ -33,7 +33,7 @@ Route::prefix('auth')->group(function () {
 });
 
 // Parish (auth + role parish)
-Route::prefix('parish')->middleware(['auth:sanctum', 'role.parish'])->group(function () {
+Route::prefix('parish')->middleware(['auth:sanctum', 'role.parish', 'parish.approved'])->group(function () {
     Route::get('profile', [ParishProfileController::class, 'show']);
     Route::put('profile', [ParishProfileController::class, 'update']);
     Route::get('mass-schedules', [MassScheduleController::class, 'index']);
