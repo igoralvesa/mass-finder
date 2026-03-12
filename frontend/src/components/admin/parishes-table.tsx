@@ -108,10 +108,10 @@ export function ParishesTable({
                       </TableCell>
                       <TableCell>
                         <div className='flex justify-end gap-2'>
-                          <Button variant='ghost' size='sm' disabled>
+                          {/* <Button variant='ghost' size='sm' disabled>
                             <Eye className='h-4 w-4' />
                             Visualizar
-                          </Button>
+                          </Button> */}
                           <Button
                             variant='ghost'
                             size='sm'

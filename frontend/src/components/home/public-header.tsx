@@ -18,9 +18,9 @@ export function PublicHeader() {
           </Link>
 
           <nav className='hidden sm:flex items-center gap-4'>
-            <Link to='/'>
+            {/* <Link to='/'>
               <Button variant='ghost'>Home</Button>
-            </Link>
+            </Link> */}
             <Link to='/register-parish'>
               <Button variant='ghost'>Cadastrar Paróquia</Button>
             </Link>
