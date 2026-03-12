@@ -6,8 +6,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Clock, Church, Loader2 } from 'lucide-react';
-import { usePublicParishById } from '@/hooks';
+import { MapPin, Clock, Church } from 'lucide-react';
 import type { MassSchedule } from '@/types/mass-schedule';
 
 const DAY_OF_WEEK_LABELS: Record<number, string> = {
@@ -26,23 +25,20 @@ function formatMassLabel(mass: MassSchedule): string {
 }
 
 interface ParishCardProps {
-  id: number;
   name: string;
   neighborhood: string;
   address: string;
+  massSchedules: MassSchedule[];
   imageUrl?: string;
 }
 
 export function ParishCard({
-  id,
   name,
   neighborhood,
   address,
+  massSchedules,
   imageUrl,
 }: ParishCardProps) {
-  const { data, isLoading } = usePublicParishById(id);
-  const massSchedules = data?.data.mass_schedules ?? [];
-
   return (
     <Card className='hover:shadow-lg transition-shadow duration-200 border-l-4 border-l-primary/20 overflow-hidden'>
       {imageUrl && (
@@ -81,9 +77,7 @@ export function ParishCard({
             <p className='text-sm font-medium'>Horários de Missa:</p>
           </div>
           <div className='flex flex-wrap gap-2'>
-            {isLoading ? (
-              <Loader2 className='h-4 w-4 animate-spin text-muted-foreground' />
-            ) : massSchedules.length > 0 ? (
+            {massSchedules.length > 0 ? (
               massSchedules.map((mass) => (
                 <Badge
                   key={mass.id}

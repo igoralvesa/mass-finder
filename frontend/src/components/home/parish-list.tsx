@@ -1,10 +1,10 @@
 import { churchImages } from '@/assets/church-images';
 import { ParishCard } from './parish-card';
-import type { Parish } from '@/types/parish';
+import type { ParishDetail } from '@/types/parish';
 import { Church } from 'lucide-react';
 
 interface ParishListProps {
-  parishes: Parish[];
+  parishes: ParishDetail[];
 }
 
 export function ParishList({ parishes }: ParishListProps) {
@@ -31,10 +31,10 @@ export function ParishList({ parishes }: ParishListProps) {
         {parishes.map((parish, index) => (
           <ParishCard
             key={parish.id}
-            id={parish.id}
             name={parish.name}
             neighborhood={parish.neighborhood}
             address={parish.address}
+            massSchedules={parish.mass_schedules}
             imageUrl={getRandomImage(index)}
           />
         ))}

@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Route;
 // Public
 Route::prefix('public')->group(function () {
     Route::get('parishes', [ParishPublicController::class, 'index']);
-    Route::get('parishes/{parish}', [ParishPublicController::class, 'show']);
 });
 
 // Auth

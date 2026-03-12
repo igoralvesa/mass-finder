@@ -21,12 +21,12 @@ export function PublicHeader() {
             <Link to='/'>
               <Button variant='ghost'>Home</Button>
             </Link>
-            <Link to='/'>
+            <Link to='/register-parish'>
               <Button variant='ghost'>Cadastrar Paróquia</Button>
             </Link>
-            <Link to='/'>
+            <Link to='/login'>
               <Button variant='default' className='shadow-sm'>
-                Login Paróquia
+                Login
               </Button>
             </Link>
             <ThemeToggle />

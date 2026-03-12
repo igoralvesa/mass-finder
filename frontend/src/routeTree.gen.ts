@@ -9,8 +9,32 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as RegisterParishRouteImport } from './routes/register-parish'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as DashboardParishRouteImport } from './routes/dashboard-parish'
+import { Route as DashboardAdminRouteImport } from './routes/dashboard-admin'
 import { Route as IndexRouteImport } from './routes/index'
 
+const RegisterParishRoute = RegisterParishRouteImport.update({
+  id: '/register-parish',
+  path: '/register-parish',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardParishRoute = DashboardParishRouteImport.update({
+  id: '/dashboard-parish',
+  path: '/dashboard-parish',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DashboardAdminRoute = DashboardAdminRouteImport.update({
+  id: '/dashboard-admin',
+  path: '/dashboard-admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +43,88 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard-admin': typeof DashboardAdminRoute
+  '/dashboard-parish': typeof DashboardParishRoute
+  '/login': typeof LoginRoute
+  '/register-parish': typeof RegisterParishRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard-admin': typeof DashboardAdminRoute
+  '/dashboard-parish': typeof DashboardParishRoute
+  '/login': typeof LoginRoute
+  '/register-parish': typeof RegisterParishRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard-admin': typeof DashboardAdminRoute
+  '/dashboard-parish': typeof DashboardParishRoute
+  '/login': typeof LoginRoute
+  '/register-parish': typeof RegisterParishRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/dashboard-admin'
+    | '/dashboard-parish'
+    | '/login'
+    | '/register-parish'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/dashboard-admin'
+    | '/dashboard-parish'
+    | '/login'
+    | '/register-parish'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard-admin'
+    | '/dashboard-parish'
+    | '/login'
+    | '/register-parish'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardAdminRoute: typeof DashboardAdminRoute
+  DashboardParishRoute: typeof DashboardParishRoute
+  LoginRoute: typeof LoginRoute
+  RegisterParishRoute: typeof RegisterParishRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/register-parish': {
+      id: '/register-parish'
+      path: '/register-parish'
+      fullPath: '/register-parish'
+      preLoaderRoute: typeof RegisterParishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard-parish': {
+      id: '/dashboard-parish'
+      path: '/dashboard-parish'
+      fullPath: '/dashboard-parish'
+      preLoaderRoute: typeof DashboardParishRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/dashboard-admin': {
+      id: '/dashboard-admin'
+      path: '/dashboard-admin'
+      fullPath: '/dashboard-admin'
+      preLoaderRoute: typeof DashboardAdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,6 +137,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardAdminRoute: DashboardAdminRoute,
+  DashboardParishRoute: DashboardParishRoute,
+  LoginRoute: LoginRoute,
+  RegisterParishRoute: RegisterParishRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

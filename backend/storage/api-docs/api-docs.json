@@ -1435,7 +1435,7 @@
                 "tags": [
                     "Public"
                 ],
-                "summary": "Listar paróquias aprovadas",
+                "summary": "Listar paróquias aprovadas com horários de missa",
                 "operationId": "dca16d59eeb8e7cf1535f0011efec60f",
                 "parameters": [
                     {
@@ -1459,7 +1459,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Lista paginada de paróquias",
+                        "description": "Lista paginada de paróquias com horários de missa",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -1467,7 +1467,7 @@
                                         "data": {
                                             "type": "array",
                                             "items": {
-                                                "$ref": "#/components/schemas/Parish"
+                                                "$ref": "#/components/schemas/ParishDetail"
                                             }
                                         },
                                         "links": {
@@ -1488,52 +1488,6 @@
                             "application/json": {
                                 "schema": {
                                     "$ref": "#/components/schemas/ErrorValidationResponse"
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/public/parishes/{parish}": {
-            "get": {
-                "tags": [
-                    "Public"
-                ],
-                "summary": "Exibir paróquia por ID",
-                "operationId": "d470e87be934d4be8d14d5f6592674aa",
-                "parameters": [
-                    {
-                        "name": "parish",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Paróquia com horários de missa",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "$ref": "#/components/schemas/ParishDetail"
-                                        }
-                                    },
-                                    "type": "object"
-                                }
-                            }
-                        }
-                    },
-                    "404": {
-                        "description": "Paróquia não encontrada",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/GenericMessageResponse"
                                 }
                             }
                         }
