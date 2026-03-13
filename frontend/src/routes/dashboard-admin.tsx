@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 import { Users, FileText } from 'lucide-react';
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
 import {
@@ -14,8 +14,14 @@ import {
   useRejectParish,
   useDeleteAdminParish,
 } from '@/hooks';
+import { getAccessToken } from '@/utils/token-storage';
 
 export const Route = createFileRoute('/dashboard-admin')({
+  beforeLoad: () => {
+    if (!getAccessToken()) {
+      throw redirect({ to: '/login' });
+    }
+  },
   component: DashboardAdminPage,
 });
 
