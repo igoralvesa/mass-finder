@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef, useCallback } from 'react';
 import { createFileRoute } from '@tanstack/react-router';
 import { PublicHeader } from '@/components/home/public-header';
 import { HeroSection } from '@/components/home/hero-section';
@@ -15,10 +15,23 @@ export const Route = createFileRoute('/')({
 function HomePage() {
   const [filters, setFilters] = useState<FilterValues>({});
 
-  const { data, isLoading, isError, error } = usePublicParishes({
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = usePublicParishes({
     neighborhood: filters.neighborhood,
     day_of_week: filters.day_of_week,
   });
+
+  const parishes = useMemo(
+    () => data?.pages.flatMap((page) => page.data) ?? [],
+    [data],
+  );
 
   // Busca paróquias SEM filtro de bairro para popular o dropdown de bairros.
   // Assim o dropdown sempre mostra todos os bairros disponíveis, mesmo após filtrar.
@@ -27,16 +40,36 @@ function HomePage() {
     // não passa neighborhood - retorna paróquias de todos os bairros
   });
 
-  const parishes = data?.data ?? [];
-
   const neighborhoods = useMemo(() => {
-    const source = neighborhoodsData?.data ?? [];
+    const source = neighborhoodsData?.pages.flatMap((page) => page.data) ?? [];
     if (source.length === 0) return [];
-    const unique = new Set(
-      source.map((p) => p.neighborhood).filter(Boolean),
-    );
+    const unique = new Set(source.map((p) => p.neighborhood).filter(Boolean));
     return Array.from(unique).sort();
   }, [neighborhoodsData]);
+
+  // Infinite scroll: observa um elemento sentinela no final da lista
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const handleIntersect = useCallback(
+    (entries: IntersectionObserverEntry[]) => {
+      if (entries[0].isIntersecting && hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    },
+    [fetchNextPage, hasNextPage, isFetchingNextPage],
+  );
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+
+    const observer = new IntersectionObserver(handleIntersect, {
+      rootMargin: '200px',
+    });
+    observer.observe(sentinel);
+
+    return () => observer.disconnect();
+  }, [handleIntersect]);
 
   function handleFilter(values: FilterValues) {
     setFilters(values);
@@ -66,7 +99,15 @@ function HomePage() {
               </p>
             </div>
           ) : (
-            <ParishList parishes={parishes} />
+            <>
+              <ParishList parishes={parishes} />
+
+              <div ref={sentinelRef} className='flex justify-center py-4'>
+                {isFetchingNextPage && (
+                  <Loader2 className='h-6 w-6 animate-spin text-primary' />
+                )}
+              </div>
+            </>
           )}
         </div>
       </main>
