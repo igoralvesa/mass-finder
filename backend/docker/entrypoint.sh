@@ -5,6 +5,14 @@ echo "Creating storage directories..."
 mkdir -p storage/framework/{sessions,views,cache/data}
 chmod -R 775 storage bootstrap/cache
 
+echo "Installing dependencies..."
+composer install --no-interaction
+
+if [ -z "$APP_KEY" ] || grep -q "^APP_KEY=$" .env 2>/dev/null; then
+  echo "Generating APP_KEY..."
+  php artisan key:generate --force
+fi
+
 echo "Waiting for database..."
 
 until php artisan tinker --execute="try { DB::connection()->getPdo(); echo 'DB connected'; } catch (\Exception \$e) { exit(1); }"; do
