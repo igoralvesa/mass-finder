@@ -19,9 +19,20 @@ const DAY_OF_WEEK_LABELS: Record<number, string> = {
   6: 'Sábado',
 };
 
-function formatMassLabel(mass: MassSchedule): string {
-  const day = DAY_OF_WEEK_LABELS[mass.day_of_week] ?? `Dia ${mass.day_of_week}`;
-  return `${day} - ${mass.time}`;
+function groupSchedulesByDay(massSchedules: MassSchedule[]): Map<number, MassSchedule[]> {
+  const grouped = new Map<number, MassSchedule[]>();
+  for (const mass of massSchedules) {
+    const existing = grouped.get(mass.day_of_week) ?? [];
+    existing.push(mass);
+    grouped.set(mass.day_of_week, existing);
+  }
+  return grouped;
+}
+
+function formatGroupedLabel(dayOfWeek: number, schedules: MassSchedule[]): string {
+  const day = DAY_OF_WEEK_LABELS[dayOfWeek] ?? `Dia ${dayOfWeek}`;
+  const times = schedules.map((s) => s.time).join(', ');
+  return `${day} - ${times}`;
 }
 
 interface ParishCardProps {
@@ -78,15 +89,17 @@ export function ParishCard({
           </div>
           <div className='flex flex-wrap gap-2'>
             {massSchedules.length > 0 ? (
-              massSchedules.map((mass) => (
-                <Badge
-                  key={mass.id}
-                  variant='secondary'
-                  className='bg-accent/50 hover:bg-accent'
-                >
-                  {formatMassLabel(mass)}
-                </Badge>
-              ))
+              Array.from(groupSchedulesByDay(massSchedules).entries())
+                .sort(([a], [b]) => a - b)
+                .map(([dayOfWeek, schedules]) => (
+                  <Badge
+                    key={dayOfWeek}
+                    variant='secondary'
+                    className='bg-accent/50 hover:bg-accent'
+                  >
+                    {formatGroupedLabel(dayOfWeek, schedules)}
+                  </Badge>
+                ))
             ) : (
               <span className='text-sm text-muted-foreground'>
                 Nenhum horário cadastrado

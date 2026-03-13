@@ -20,15 +20,23 @@ function HomePage() {
     day_of_week: filters.day_of_week,
   });
 
+  // Busca paróquias SEM filtro de bairro para popular o dropdown de bairros.
+  // Assim o dropdown sempre mostra todos os bairros disponíveis, mesmo após filtrar.
+  const { data: neighborhoodsData } = usePublicParishes({
+    day_of_week: filters.day_of_week,
+    // não passa neighborhood - retorna paróquias de todos os bairros
+  });
+
   const parishes = data?.data ?? [];
 
   const neighborhoods = useMemo(() => {
-    if (!data?.data) return [];
+    const source = neighborhoodsData?.data ?? [];
+    if (source.length === 0) return [];
     const unique = new Set(
-      data.data.map((p) => p.neighborhood).filter(Boolean),
+      source.map((p) => p.neighborhood).filter(Boolean),
     );
     return Array.from(unique).sort();
-  }, [data?.data]);
+  }, [neighborhoodsData]);
 
   function handleFilter(values: FilterValues) {
     setFilters(values);
